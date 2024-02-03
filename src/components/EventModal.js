@@ -2,26 +2,13 @@ import React, { useContext, useState } from "react";
 import GlobalContext from "../context/GlobalContext";
 import dayjs from "dayjs";
 
-const labelsClasses = [
-  "indigo",
-  "gray",
-  "green",
-  "blue",
-  "red",
-  "purple",
-];
+const labelsClasses = ["indigo", "gray", "green", "blue", "red", "purple"];
 
 export default function EventModal() {
-  const {
-    setShowEventModal,
-    daySelected,
-    dispatchCalEvent,
-    selectedEvent,
-  } = useContext(GlobalContext);
+  const { setShowEventModal, daySelected, dispatchCalEvent, selectedEvent } =
+    useContext(GlobalContext);
 
-  const [title, setTitle] = useState(
-    selectedEvent ? selectedEvent.title : ""
-  );
+  const [title, setTitle] = useState(selectedEvent ? selectedEvent.title : "");
   const [description, setDescription] = useState(
     selectedEvent ? selectedEvent.description : ""
   );
@@ -29,6 +16,9 @@ export default function EventModal() {
     selectedEvent
       ? labelsClasses.find((lbl) => lbl === selectedEvent.label)
       : labelsClasses[0]
+  );
+  const [location, setLocation] = useState(
+    selectedEvent ? selectedEvent.location : ""
   );
 
   // Time-related state
@@ -48,14 +38,13 @@ export default function EventModal() {
   function handleSubmit(e) {
     e.preventDefault();
     const timeString = `${selectedHour}:${selectedMinute}:${selectedSecond} ${selectedAmPm}`;
-    const dateTime = `${daySelected.format(
-      "YYYY-MM-DD"
-    )} ${timeString}`;
+    const dateTime = `${daySelected.format("YYYY-MM-DD")} ${timeString}`;
 
     const calendarEvent = {
       title,
       description,
       label: selectedLabel,
+      location, // Add location to the event
       day: dayjs(dateTime).valueOf(),
       id: selectedEvent ? selectedEvent.id : Date.now(),
     };
@@ -125,6 +114,24 @@ export default function EventModal() {
             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
             onChange={(e) => setDescription(e.target.value)}
           />
+        </div>
+        <div className="mt-4">
+          <label className="block text-sm font-medium text-gray-700">
+            Location
+          </label>
+          <div className="flex items-center">
+            <span className="material-icons-outlined text-gray-500">
+              location_on
+            </span>
+            <input
+              type="text"
+              name="location"
+              placeholder="Add location"
+              value={location}
+              className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+              onChange={(e) => setLocation(e.target.value)}
+            />
+          </div>
         </div>
         <div className="mt-4">
           <label className="block text-sm font-medium text-gray-700">
